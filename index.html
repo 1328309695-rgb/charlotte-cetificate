@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Studio妆造产品销售业绩证明 | 刘念生</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1e6bb8;
+            --light-blue: #e8f4fd;
+            --dark-blue: #0d4a8a;
+            --text-color: #333;
+            --light-gray: #f5f7fa;
+            --border-color: #e1e5eb;
+            --success-color: #28a745;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: white;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        h1 {
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .performance-summary {
+            background-color: var(--light-blue);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .summary-title {
+            color: var(--dark-blue);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .summary-title i {
+            font-size: 1.8rem;
+        }
+        
+        .highlight-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--dark-blue);
+            margin: 5px 0;
+        }
+        
+        .highlight-text {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+        
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .chart-title {
+            color: var(--dark-blue);
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .download-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        
+        .download-btn:hover {
+            background-color: var(--dark-blue);
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .achievement-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+            border-top: 4px solid var(--primary-color);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+        
+        .key-milestones {
+            background-color: var(--light-gray);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+        
+        .milestones-title {
+            color: var(--dark-blue);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--primary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .milestone {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .milestone.left {
+            left: 0;
+        }
+        
+        .milestone.right {
+            left: 50%;
+        }
+        
+        .milestone-content {
+            padding: 20px;
+            background-color: white;
+            position: relative;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .milestone-content h3 {
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+        }
+        
+        .milestone-content p {
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+        
+        .milestone::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 4px solid var(--primary-color);
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+        
+        .left::after {
+            right: -12px;
+        }
+        
+        .right::after {
+            left: -12px;
+        }
+        
+        .footer-note {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-card {
+                padding: 15px;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .milestone {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .milestone.right {
+                left: 0;
+            }
+            
+            .milestone::after {
+                left: 21px;
+            }
+            
+            .right::after, .left::after {
+                left: 21px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HR Studio妆造产品业绩证明</h1>
+        <p class="subtitle">刘念生 | 从0到1开拓市场，实现162倍增长</p>
+        <p>数据期间：2022年2月 - 2022年5月</p>
+    </header>
+    
+    <div class="performance-summary">
+        <h2 class="summary-title">📈 业绩总览</h2>
+        <p>在2022年2月至5月期间，我独立负责HR Studio品牌化妆品线的市场开拓与销售工作，将长期停滞的业务从0到1重构，实现以下突破性成果：</p>
+        <div class="highlight-number">162倍</div>
+        <p class="highlight-text">月销售额从250元增长至40,500元</p>
+        <p>产品线从2款扩展至21款，建立完整的妆造产品销售体系，为后续业务增长奠定坚实基础。</p>
+    </div>
+    
+    <div class="achievement-stats">
+        <div class="stat-card">
+            <div class="stat-label">月销售额增长</div>
+            <div class="stat-value">162倍</div>
+            <p>从250元到40,500元</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">产品线扩展</div>
+            <div class="stat-value">10.5倍</div>
+            <p>从2款到21款产品</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">订单量增长</div>
+            <div class="stat-value">31倍</div>
+            <p>从2单到62单/月</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">客单价提升</div>
+            <div class="stat-value">5.2倍</div>
+            <p>从125元到653元</p>
+        </div>
+    </div>
+    
+    <div class="charts-container">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 class="chart-title">月销售额增长趋势</h3>
+                <button class="download-btn" onclick="downloadChart('salesChart')">下载图表</button>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="salesChart"></canvas>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1e6bb8;"></div>
+                    <span>月销售额(元)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 class="chart-title">产品线扩展与订单量</h3>
+                <button class="download-btn" onclick="downloadChart('productsChart')">下载图表</button>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="productsChart"></canvas>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1e6bb8;"></div>
+                    <span>售出产品种类数</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #4ba3e3;"></div>
+                    <span>订单量(单)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 class="chart-title">平均客单价增长</h3>
+                <button class="download-btn" onclick="downloadChart('avgPriceChart')">下载图表</button>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="avgPriceChart"></canvas>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1e6bb8;"></div>
+                    <span>平均客单价(元)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 class="chart-title">各产品类别销售额占比(2022年5月)</h3>
+                <button class="download-btn" onclick="downloadChart('productCategoriesChart')">下载图表</button>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="productCategoriesChart"></canvas>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1e6bb8;"></div>
+                    <span>化妆刷套装</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #4ba3e3;"></div>
+                    <span>单支粉底刷</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #78c4f2;"></div>
+                    <span>美妆蛋</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #a6d9ff;"></div>
+                    <span>发型工具</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #0d4a8a;"></div>
+                    <span>其他化妆品</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="key-milestones">
+        <h2 class="milestones-title">从0到1的开拓历程</h2>
+        <div class="timeline">
+            <div class="milestone left">
+                <div class="milestone-content">
+                    <h3>2022年2月：起点</h3>
+                    <p>• 月销售额仅250元，仅2款产品有零星销售</p>
+                    <p>• 市场渠道未打开，产品线单一</p>
+                    <p>• 启动市场调研与渠道规划</p>
+                </div>
+            </div>
+            <div class="milestone right">
+                <div class="milestone-content">
+                    <h3>2022年3月：突破期</h3>
+                    <p>• 开拓22种产品线，销售额达9,100元</p>
+                    <p>• 引入HR化妆刷套装(8套，2,419元)</p>
+                    <p>• 单支粉底刷售出10支(824元)</p>
+                    <p>• 月销售额环比增长36倍</p>
+                </div>
+            </div>
+            <div class="milestone left">
+                <div class="milestone-content">
+                    <h3>2022年4月：增长期</h3>
+                    <p>• 引入专业班礼包(卡婷、松间渡等品牌)</p>
+                    <p>• 化妆品销售额占比达88%</p>
+                    <p>• 月销售额达24,100元，增长96倍</p>
+                    <p>• 平均客单价提升至321元</p>
+                </div>
+            </div>
+            <div class="milestone right">
+                <div class="milestone-content">
+                    <h3>2022年5月：稳定期</h3>
+                    <p>• 化妆品销售额占比96%</p>
+                    <p>• 月销售额达40,500元，累计增长162倍</p>
+                    <p>• 平均客单价达653元，提升5.2倍</p>
+                    <p>• 建立完整产品矩阵和销售体系</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-note">
+        <p>本业绩证明基于HR Studio 2022年2月至5月实际库存与销售数据整理</p>
+        <p>数据来源：HR Studio库存表及销售记录 | 更新日期：2025年12月</p>
+        <p>联系人：刘念生 | 电话：19098011207 | 邮箱：n.s.liu@outlook.com</p>
+    </div>
+
+    <script>
+        // 注册插件
+        Chart.register(ChartDataLabels);
+        
+        // 数据定义
+        const months = ['2022年2月', '2022年3月', '2022年4月', '2022年5月'];
+        const salesData = [250, 9100, 24100, 40500];
+        const productTypesData = [2, 22, 18, 21];
+        const orderQuantityData = [2, 68, 75, 62];
+        const avgPriceData = [125, 134, 321, 653];
+        
+        // 2022年5月各产品类别销售额数据
+        const mayProductCategories = [
+            { label: '化妆刷套装', value: 298, color: '#1e6bb8' },
+            { label: '单支粉底刷', value: 0, color: '#4ba3e3' },
+            { label: '美妆蛋', value: 198, color: '#78c4f2' },
+            { label: '发型工具', value: 1110, color: '#a6d9ff' },
+            { label: '其他化妆品', value: 39000, color: '#0d4a8a' }
+        ];
+        
+        // 计算各产品类别在5月总销售额中的占比
+        const mayTotalSales = 40500;
+        const mayProductPercentages = mayProductCategories.map(item => ({
+            label: item.label,
+            percentage: ((item.value / mayTotalSales) * 100).toFixed(1),
+            value: item.value,
+            color: item.color
+        }));
+        
+        // 图表颜色配置
+        const primaryColor = '#1e6bb8';
+        const lightBlue = '#4ba3e3';
+        const lighterBlue = '#78c4f2';
+        const lightestBlue = '#a6d9ff';
+        const darkBlue = '#0d4a8a';
+        
+        // 初始化销售额图表
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: '月销售额(元)',
+                    data: salesData,
+                    borderColor: primaryColor,
+                    backgroundColor: 'rgba(30, 107, 184, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: primaryColor,
+                    pointRadius: 6,
+                    pointHoverRadius: 9
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `销售额: ${context.raw.toLocaleString()}元`;
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        display: true,
+                        align: 'top',
+                        anchor: 'end',
+                        color: '#333',
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        },
+                        formatter: function(value) {
+                            return value.toLocaleString();
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '销售额(元)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '月份'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 初始化产品线与订单量图表
+        const productsCtx = document.getElementById('productsChart').getContext('2d');
+        const productsChart = new Chart(productsCtx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: '售出产品种类数',
+                        data: productTypesData,
+                        backgroundColor: primaryColor,
+                        borderColor: primaryColor,
+                        borderWidth: 1,
+                        yAxisID: 'y',
+                        datalabels: {
+                            color: '#fff',
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    {
+                        label: '订单量(单)',
+                        data: orderQuantityData,
+                        backgroundColor: lightBlue,
+                        borderColor: lightBlue,
+                        borderWidth: 1,
+                        yAxisID: 'y1',
+                        type: 'line',
+                        tension: 0.3,
+                        fill: false,
+                        pointBackgroundColor: lightBlue,
+                        pointRadius: 6,
+                        datalabels: {
+                            align: 'top',
+                            anchor: 'end',
+                            color: '#333',
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        display: true,
+                        formatter: function(value, context) {
+                            return value;
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: '产品种类数'
+                        },
+                        beginAtZero: true
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: '订单量(单)'
+                        },
+                        beginAtZero: true,
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '月份'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 初始化平均客单价图表
+        const avgPriceCtx = document.getElementById('avgPriceChart').getContext('2d');
+        const avgPriceChart = new Chart(avgPriceCtx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: '平均客单价(元)',
+                    data: avgPriceData,
+                    borderColor: primaryColor,
+                    backgroundColor: 'rgba(30, 107, 184, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: primaryColor,
+                    pointRadius: 6,
+                    pointHoverRadius: 9
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `客单价: ${context.raw.toLocaleString()}元`;
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        display: true,
+                        align: 'top',
+                        anchor: 'end',
+                        color: '#333',
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        },
+                        formatter: function(value) {
+                            return value.toLocaleString();
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '客单价(元)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: '月份'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 初始化产品类别销售额占比环形饼状图
+        const productCategoriesCtx = document.getElementById('productCategoriesChart').getContext('2d');
+        const productCategoriesChart = new Chart(productCategoriesCtx, {
+            type: 'doughnut',
+            data: {
+                labels: mayProductPercentages.map(item => `${item.label} (${item.percentage}%)`),
+                datasets: [{
+                    data: mayProductPercentages.map(item => item.value),
+                    backgroundColor: mayProductPercentages.map(item => item.color),
+                    borderWidth: 1,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const percentage = ((value / mayTotalSales) * 100).toFixed(1);
+                                return `${label.split(' (')[0]}: ${value.toLocaleString()}元 (${percentage}%)`;
+                            }
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        display: true,
+                        formatter: function(value, context) {
+                            const percentage = ((value / mayTotalSales) * 100).toFixed(1);
+                            return `${percentage}%`;
+                        },
+                        color: '#fff',
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // 图表下载功能
+        function downloadChart(chartId) {
+            let chartElement;
+            let fileName;
+            
+            switch(chartId) {
+                case 'salesChart':
+                    chartElement = document.getElementById('salesChart');
+                    fileName = '月销售额增长趋势.png';
+                    break;
+                case 'productsChart':
+                    chartElement = document.getElementById('productsChart');
+                    fileName = '产品线扩展与订单量.png';
+                    break;
+                case 'avgPriceChart':
+                    chartElement = document.getElementById('avgPriceChart');
+                    fileName = '平均客单价增长.png';
+                    break;
+                case 'productCategoriesChart':
+                    chartElement = document.getElementById('productCategoriesChart');
+                    fileName = '各产品类别销售额占比.png';
+                    break;
+                default:
+                    return;
+            }
+            
+            // 获取父级卡片元素以确保背景和样式
+            const cardElement = chartElement.closest('.chart-card');
+            
+            html2canvas(cardElement, {
+                backgroundColor: '#ffffff',
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = fileName;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+        
+        // 添加页面加载完成提示
+        window.addEventListener('load', function() {
+            console.log('HR Studio业绩证明看板已加载完成');
+        });
+    </script>
+</body>
+</html>
